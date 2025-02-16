@@ -17,4 +17,9 @@ class PrefsRepository {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool(isUserLogged, true);
   }
+
+  void deleteLogged() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(isUserLogged, false);
+  }
 }

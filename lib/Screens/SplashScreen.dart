@@ -21,8 +21,6 @@ class _SplashScreenState extends State<SplashScreen> {
   var prefsRepository = PrefsRepository();
 
   Future<void> _checkLoginStatus() async {
-    await Future.delayed(const Duration(seconds: 2)); // Имитируем загрузку
-
     bool isLoggedIn = await prefsRepository.isLogged();
 
     if (isLoggedIn) {
