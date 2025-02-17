@@ -1,3 +1,4 @@
+import 'package:bronya/Repository/AuthRepository.dart';
 import 'package:bronya/Repository/PrefsRepository.dart';
 import 'package:bronya/Screens/HomeScreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,23 +9,31 @@ class RegisterScreen extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final prefsRepository = PrefsRepository();
+  final _authRepository = AuthRepository();
 
   RegisterScreen({super.key});
 
-  void _register(BuildContext context) {
+  void _register(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Регистрация успешна!')),
-      );
-      _saveLogged();
-      Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => HomeScreen())
-      );
+      var token = await _authRepository.register(_emailController.text, _passwordController.text);
+      if (token != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Регистрация успешна!')),
+        );
+        _saveLogged(token);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => HomeScreen())
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Регистрация не прошла!')),
+        );
+      }
     }
   }
 
-  void _saveLogged() {
-    prefsRepository.saveLogged();
+  void _saveLogged(String token) {
+    prefsRepository.saveLogged(token);
   }
 
   @override

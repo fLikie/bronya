@@ -1,3 +1,4 @@
+import 'package:bronya/Repository/AuthRepository.dart';
 import 'package:bronya/Repository/PrefsRepository.dart';
 import 'package:bronya/Screens/HomeScreen.dart';
 import 'package:bronya/Screens/RegisterScreen.dart';
@@ -16,22 +17,30 @@ class _AuthScreenState extends State<AuthScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _prefsRepository = PrefsRepository();
+  final _authRepository = AuthRepository();
 
-  void _login() {
+  Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      // Тут можно добавить логику входа (например, отправку данных на сервер)
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Успешный вход!')),
-      );
-      _saveLogged();
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => HomeScreen())
-      );
+      var token = await _authRepository.login(_emailController.text, _passwordController.text);
+      if (token != null) {
+        // Тут можно добавить логику входа (например, отправку данных на сервер)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Успешный вход!')),
+        );
+        _saveLogged(token);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => HomeScreen())
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Вход не прошел!')),
+        );
+      }
     }
   }
 
-  void _saveLogged() {
-    _prefsRepository.saveLogged();
+  void _saveLogged(String token) {
+    _prefsRepository.saveLogged(token);
   }
 
   @override
