@@ -8,7 +8,8 @@ class PrefsRepository {
 
   Future<bool> isLogged() async {
     final prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getString(TOKEN) != null || prefs.getString(TOKEN) != "";
+    var token = prefs.getString(TOKEN);
+    bool isLoggedIn = token != null;
 
     return isLoggedIn;
   }
@@ -20,7 +21,7 @@ class PrefsRepository {
 
   void deleteLogged() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(TOKEN, "");
+    prefs.clear();
   }
 
   Future<String?> getToken() async {

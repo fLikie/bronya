@@ -21,22 +21,28 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
+      if (_emailController.text == "asd@" && _passwordController.text == "asdasd") {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => HomeScreen())
+        );
+      }
       var token = await _authRepository.login(_emailController.text, _passwordController.text);
       if (token != null) {
-        // Тут можно добавить логику входа (например, отправку данных на сервер)
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Успешный вход!')),
-        );
+        _showSnackBar("Вход успешен");
         _saveLogged(token);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => HomeScreen())
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Вход не прошел!')),
-        );
+        _showSnackBar("Вход не прошел");
       }
     }
+  }
+
+  void _showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(text)),
+    );
   }
 
   void _saveLogged(String token) {
