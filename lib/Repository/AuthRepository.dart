@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class AuthRepository {
 
-  final host = "http://45.143.95.91:8080";
+  final host = "http://zabron.space/api";
   final RESPONSE_OK = 200;
   final RESPONSE_CREATED = 201;
   final _prefsRepository = PrefsRepository();

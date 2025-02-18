@@ -21,11 +21,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      if (_emailController.text == "asd@" && _passwordController.text == "asdasd") {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => HomeScreen())
-        );
-      }
       var token = await _authRepository.login(_emailController.text, _passwordController.text);
       if (token != null) {
         _showSnackBar("Вход успешен");

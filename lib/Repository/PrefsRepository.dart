@@ -27,5 +27,6 @@ class PrefsRepository {
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString(TOKEN) ?? "";
+    return token;
   }
 }
