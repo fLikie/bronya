@@ -10,12 +10,12 @@ class AuthRepository {
   final RESPONSE_CREATED = 201;
   final _prefsRepository = PrefsRepository();
 
-  Future<String?> login(String email, String password) async {
+  Future<String?> login(String phone, String password) async {
     final url = Uri.parse("$host/login");
     final response = await http.post(
       url,
       headers: { "Content-Type": "application/json" },
-      body: jsonEncode({ "email": email, "password": password }),
+      body: jsonEncode({ 'phone': phone, "password": password }),
     );
 
     if (response.statusCode == RESPONSE_OK) {
@@ -26,12 +26,12 @@ class AuthRepository {
     }
   }
 
-  Future<String?> register(String email, String password) async {
+  Future<String?> register(String phone, String password) async {
     final url = Uri.parse("$host/register");
     final response = await http.post(
       url,
       headers: { "Content-Type": "application/json" },
-      body: jsonEncode({ "email": email, "password": password}),
+      body: jsonEncode({ "phone": phone, "password": password}),
     );
 
     if (response.statusCode == RESPONSE_CREATED) {

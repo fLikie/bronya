@@ -3,6 +3,7 @@ import 'package:bronya/Repository/PrefsRepository.dart';
 import 'package:bronya/Screens/HomeScreen.dart';
 import 'package:bronya/Screens/RegisterScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -13,15 +14,20 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
 
-  final _emailController = TextEditingController();
+  final _phoneController  = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _prefsRepository = PrefsRepository();
   final _authRepository = AuthRepository();
+  final maskFormatter = MaskTextInputFormatter(
+    mask: '+7 (###) ###-##-##',
+    filter: { "#": RegExp(r'[0-9]') },
+    type: MaskAutoCompletionType.lazy,
+  );
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      var token = await _authRepository.login(_emailController.text, _passwordController.text);
+      var token = await _authRepository.login(_phoneController.text, _passwordController.text);
       if (token != null) {
         _showSnackBar("Вход успешен");
         _saveLogged(token);
@@ -61,15 +67,17 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  controller: _emailController,
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [maskFormatter],
                   decoration: const InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'Номер телефона',
+                    hintText: '+7 999 123-45-67',
                     border: OutlineInputBorder(),
                   ),
-                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value == null || value.isEmpty || !value.contains('@')) {
-                      return 'Введите корректный email';
+                    if (value == null || value.isEmpty) {
+                      return 'Введите корректный номер телефона';
                     }
                     return null;
                   },
