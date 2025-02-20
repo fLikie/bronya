@@ -1,4 +1,5 @@
 import 'package:bronya/Repository/PlacesRepository.dart';
+import 'package:bronya/Screens/PlaceScreen.dart';
 import 'package:bronya/model/Place.dart';
 import 'package:flutter/material.dart';
 import 'package:bronya/ui/AppDrawer.dart';
@@ -48,81 +49,79 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: places.length,
               itemBuilder: (context, index) {
                 final place = places[index];
-                return Card(
-                  margin: const EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Изображение заведения с обработкой ошибки загрузки
-                      ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(10),
-                        ),
-                        child: Image.network(
-                          place.imageUrl?? "",
-                          height: 180,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              height: 180,
-                              color: Colors.grey.shade300,
-                              child: const Center(
-                                child: Icon(
-                                  Icons.error,
-                                  size: 50,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlaceDetailScreen(place: place),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              place.name,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                    );
+                  },
+                  child: Card(
+                    margin: const EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                          child: Image.network(
+                            place.imageUrl ?? "",
+                            height: 180,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 180,
+                                color: Colors.grey.shade300,
+                                child: const Center(
+                                  child: Icon(Icons.error, size: 50, color: Colors.red),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                place.name,
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              place.description,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
+                              const SizedBox(height: 5),
+                              Text(
+                                place.description,
+                                style: const TextStyle(fontSize: 16, color: Colors.grey),
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                // Здесь можно реализовать логику бронирования заведения
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Бронирование ${place.name}"),
+                              const SizedBox(height: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Переход к экрану бронирования при нажатии кнопки
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PlaceDetailScreen(place: place),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.teal,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.teal,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
                                 ),
+                                child: const Text("Забронировать"),
                               ),
-                              child: const Text("Забронировать"),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },

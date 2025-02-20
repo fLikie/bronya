@@ -27,7 +27,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      var token = await _authRepository.login(_phoneController.text, _passwordController.text);
+      var phone = '7${maskFormatter.getUnmaskedText()}';
+      var token = await _authRepository.login(phone, _passwordController.text);
       if (token != null) {
         _showSnackBar("Вход успешен");
         _saveLogged(token);

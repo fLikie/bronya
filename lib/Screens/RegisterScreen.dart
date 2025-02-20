@@ -21,7 +21,8 @@ class RegisterScreen extends StatelessWidget {
 
   void _register(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      var token = await _authRepository.register(_phoneController.text, _passwordController.text);
+      var phone = '7${maskFormatter.getUnmaskedText()}';
+      var token = await _authRepository.register(phone, _passwordController.text);
       if (token != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Регистрация успешна!')),
